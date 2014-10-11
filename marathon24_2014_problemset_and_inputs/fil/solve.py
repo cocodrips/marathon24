@@ -9,6 +9,9 @@ class D(object):
         self.end = 0
         self.length = 0
 
+    def __lt__(self, other):
+        return self.length > other.length
+
     def __repr__(self):
         return '<{} ({}:{})>'.format(self.length, self.start, self.end)
 
@@ -42,12 +45,31 @@ def d_len(string):
 
 def solve(k, string):
     Ds = d_len(string)
-    print Ds
+    queue = Queue.PriorityQueue()
+    length = len(string)
 
+    for d in Ds:
+        queue.put(d)
 
-    # for d in Ds:
-    #     print d
+    kk = 0
+    dd = 0
+    flag = False
+    while kk < k:
+        q = queue.get()
+        if q.start != 0:
+            kk += 1
+        if q.end != length:
+            kk +=1
+        if kk <= k:
+            dd += q.length
+        else:
+            flag = True
+            dd += q.length
+    if not flag:
+        q = queue.get()
+        dd += q.length
 
+    return dd
 
 
 
@@ -125,10 +147,13 @@ def brute(k, string):
     return maxi
 
 if __name__ == "__main__":
-    with open("fil02.in", "r") as f:
+    with open("fil03.in", "r") as f:
         N = int(f.readline())
         for i in xrange(N):
             k, string = f.readline().split()
+            print int(k), compress(string)
+            if i == 8:
+                continue
 
             l = brute(int(k), compress(string))
             print l
